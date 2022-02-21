@@ -1,0 +1,67 @@
+html {
+    background-color: beige;
+}
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    height: 390px;
+    padding: 4px;
+    margin: 80px auto;
+    border: 6px solid rgb(67, 67, 68);
+    border-radius: 4%;
+    background-color: rgb(82, 82, 109);
+}
+
+.display {
+    height: 90px;
+    margin-bottom: 1px;
+}
+.display span {
+    display: block;
+    box-sizing: border-box;
+    height: 90px;
+    line-height: 90px;
+    width: 280px;
+    padding: 0 5px;
+    background-color: rgb(197, 203, 207);
+    text-align: end;
+    font-size: 60px;
+}
+
+.buttons-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    height: 60px;
+    width: 70px;
+    font-size: 20px;
+}
+
+.clear {
+    background-color: rgb(230, 112, 112);
+}
+
+.other {
+    background-color: rgb(171, 171, 197);
+}
+
+.operator {
+    background-color: rgb(223, 168, 68);
+}
+.divide {
+    font-size: 24px;
+}
+
+.standard {
+    background-color: rgb(208, 208, 226);
+    font-weight: 400;
+}
+.b0 {
+    width: 140px;
+}
