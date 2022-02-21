@@ -50,6 +50,12 @@ button {
 .other {
     background-color: rgb(171, 171, 197);
 }
+.backspace {
+    font-size: 24px;
+}
+.plusMinus {
+    background-color: rgb(208, 208, 226);
+}
 
 .operator {
     background-color: rgb(223, 168, 68);
@@ -61,7 +67,4 @@ button {
 .standard {
     background-color: rgb(208, 208, 226);
     font-weight: 400;
-}
-.b0 {
-    width: 140px;
 }
