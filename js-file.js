@@ -1,27 +1,53 @@
 let displayValue = '';
-let toCalc = [];
+let toCalc = ['8'];
+// const gridButtons = document.querySelector('.buttons-grid');
 
-// have function(e) as separate function. right now only adds the fist .standard to the dislplay.;
-const buttonSelect = document.querySelector('.buttons-grid');
-// document.querySelector('.standard').addEventListener('click', selectNumbers);
+// input numbers into display
 selectNumbers();
 
+// Disables decimal once selected once
+document.querySelector('.b10').addEventListener('click', function(e) {
+    document.querySelector('.b10').disabled = true;
+});
+
+// To clear display
+document.querySelector('.clear').addEventListener('click', clear);
+
+// function to inputs numbers into display
 function selectNumbers() {
     for (let i = 0; i <= 10; i++) {
         const number = document.querySelector(`.b${i}`);
         number.addEventListener('click', function(e) {
+            if (displayValue === '0') { displayValue = '' };
             const numberText = e.target;
             displayValue = displayValue + numberText.textContent;
             if (displayValue.length > 9) { return };
+            if (displayValue[0] === '.') { displayValue = '0.' }; 
             document.querySelector('.inputDisplay').textContent = displayValue;
+            // change clear button text
+            document.querySelector('.clear').textContent = 'C'
         })
         continue;
+        
     }
 }
 
-function disableDecimal() {
-    document.querySelector('.b10')
+// to clear the display and stored values
+function clear() {
+    document.querySelector('.clear').textContent = 'AC';
+    if (displayValue !== '0' && toCalc.length !== 0) {
+        displayValue = '0';
+    } else if (displayValue === '0' && toCalc.length !== 0) {
+        toCalc = [];
+        displayValue = '0';
+    } else {
+        displayValue = '0';
+    }
+    document.querySelector('.inputDisplay').textContent = displayValue;
+    document.querySelector('.b10').disabled = false;
 }
+
+
 
 function add(a, b) {
     if (a === 0) { return 0;}

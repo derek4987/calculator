@@ -21,8 +21,8 @@ html {
 .display span {
     display: block;
     box-sizing: border-box;
-    height: 90px;
-    line-height: 90px;
+    height: 85px;
+    line-height: 85px;
     width: 300px;
     padding: 0 7px 0 5px;
     background-color: rgb(197, 203, 207);
@@ -41,6 +41,9 @@ button {
     height: 60px;
     width: 75px;
     font-size: 20px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 3px solid rgb(46, 46, 49);
 }
 
 .clear {
