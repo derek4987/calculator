@@ -35,8 +35,8 @@ document.querySelector('.backspace').addEventListener('click', function(e) {
 });
 
 // Plus/Minus button
-// bug type 9 numbers then minus works but minus at 0 returns Nan or can only fit 8 numbers and the negative
 document.querySelector('.plusMinus').addEventListener('click', function(e) {
+    if (displayValue === '0') { return };
     let newDisplayValue = parseFloat(displayValue) * -1;
     displayValue = `${newDisplayValue}`;
     document.querySelector('.inputDisplay').textContent = displayValue;
@@ -47,6 +47,7 @@ document.querySelector('.plusMinus').addEventListener('click', function(e) {
 document.querySelector('.percent').addEventListener('click', function(e) {
     let newDisplayValue = parseFloat(displayValue) / 100;
     displayValue= `${newDisplayValue}`;
+    displayValue = rounding(displayValue);
     document.querySelector('.inputDisplay').textContent = displayValue;
 });
 
@@ -59,9 +60,9 @@ function selectNumbers() {
         const number = document.querySelector(`.b${i}`);
         number.addEventListener('click', function(e) {
             if (displayValue === '0') { displayValue = '' };
+            if (displayValue.length > 8) { return };
             const numberText = e.target;
             displayValue = displayValue + numberText.textContent;
-            if (displayValue.length > 9) { return };
             if (displayValue[0] === '.') { displayValue = '0.' }; 
             document.querySelector('.inputDisplay').textContent = displayValue;
             // change clear button text
@@ -87,7 +88,18 @@ function clear() {
     document.querySelector('.b10').disabled = false;
 }
 
-
+// round results to fit inputDisplay
+// only covers number between -1 and 1 for now
+function rounding(value) {
+    let newValue = parseFloat(value);
+    console.log(value);
+    console.log(newValue);
+    if (Math.floor(newValue) === 0 && value.length > 8) {
+        newValue = `${Math.round(newValue * Math.pow(10,8)) / Math.pow(10,8)}`;
+        newValue = newValue.slice(0,9);
+        return newValue;
+    } else return value;
+}
 
 function add(a, b) {
     if (a === 0) { return 0;}
