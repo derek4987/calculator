@@ -60,11 +60,12 @@ button {
     background-color: rgb(208, 208, 226);
 }
 
-.operator {
+.operator,
+.equals {
     background-color: rgb(223, 168, 68);
 }
 .divide {
-    font-size: 24px;
+    font-size: 24px;   
 }
 
 .standard {

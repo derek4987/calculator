@@ -16,6 +16,7 @@
 */
 let displayValue = '';
 let toCalc = [];
+let result;
 // const gridButtons = document.querySelector('.buttons-grid');
 
 // input numbers into display
@@ -43,7 +44,6 @@ document.querySelector('.plusMinus').addEventListener('click', function(e) {
 });
 
 // Percent button
-// bugs: some numbers too long for line
 document.querySelector('.percent').addEventListener('click', function(e) {
     let newDisplayValue = parseFloat(displayValue) / 100;
     displayValue= `${newDisplayValue}`;
@@ -88,6 +88,46 @@ function clear() {
     document.querySelector('.b10').disabled = false;
 }
 
+// Select operator and calculate
+// some problems with changing operators in chain calc
+for (let i = 1; i <= 4; i++) {
+    const selectOperator = document.querySelector(`.o${i}`);
+    selectOperator.addEventListener('click', function(e) {
+        // e.target.style.backgroundColor = 'rgb(247, 224, 181)';
+        if (toCalc.length === 0) {
+            toCalc[0] = displayValue;
+            toCalc[1] = e.target.textContent;
+            displayValue = '0';
+            document.querySelector('.inputDisplay').textContent = displayValue; 
+        } else if (toCalc.length === 2) {
+            toCalc[2] = displayValue;
+            displayValue = '0';
+            console.log(toCalc);
+            const value1 = parseFloat(toCalc[0]);
+            const value2 = parseFloat(toCalc[2]);
+            const operator = toCalc[1];
+            result = operate(operator, value1, value2);
+            console.log(result);
+            result = `${result}`;
+            // displayValue = rounding(displayValue); Need to add parameters to rounding function
+            document.querySelector('.inputDisplay').textContent = result;
+            toCalc = [];
+            toCalc[0] = result;
+            toCalc[1] = e.target.textContent;
+            console.log(toCalc);
+        } else if (toCalc.length === 2 && (result === toCalc[0])) {
+            toCalc[1] = e.target.textContent;
+        }
+        
+    })
+    continue;
+}
+
+// equals button
+document.querySelector('.equals').addEventListener('click', function(e) {
+
+})
+
 // round results to fit inputDisplay
 // only covers number between -1 and 1 for now
 function rounding(value) {
@@ -102,41 +142,49 @@ function rounding(value) {
 }
 
 function add(a, b) {
-    if (a === 0) { return 0;}
     let total = a + b;
     return total;
 }
 
 function subtract(a, b) {
-    if (a === 0) { return 0;}
     let total = a - b;
     return total;
 }
 
 function multiply(a, b) {
-    if (a === 0) { return 0;}
     let total = a * b;
     return total;
 }
 
 function divide(a, b) {
-    if (a === 0) { return 0;}
     let total = a / b;
+    if (b = 0) { return 'ERR' };
     return total;
 }
 
-function plusMinus(a) {
-    if (a === 0) { return 0;}
-    let total = a * -1;
-    return total;
+// select proper function and operate
+function operate(operator, value1, value2) {
+    if (operator === '+') {
+        return add(value1, value2);
+    } else if (operator === '-') {
+        return subtract(value1, value2);
+    } else if (operator === 'x') {
+        return multiply(value1, value2);
+    } else if (operator === '÷') {
+        return divide(value1, value2);
+    } else return;
 }
 
-function percent(a) {
-    if (a === 0) { return 0;}
-    let total = a * 100;
-    return total
-}
-
-function operate() {
-
-}
+// Remove operator highlight when selected
+// function removeHighlight() {
+    // const clearButton = document.querySelector('.clear');
+    // clearButton.addEventListener('click', function(e) {
+        // for (let i = 1; i <= 4; i++) {
+        //     let operator = document.querySelector(`.o${i}`);
+        //     operator.style.backgroundColor = 'rgb(223, 168, 68)';
+        //     continue;
+        // }    
+        // document.querySelector('.divide').style.backgroundColor = 'rgb(223, 168, 68)';
+    // })
+    
+// }
