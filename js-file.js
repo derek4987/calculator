@@ -17,6 +17,7 @@
 let displayValue = '';
 let toCalc = [];
 let result;
+function enableDecimalButton() { document.querySelector('.b10').disabled = false };
 // const gridButtons = document.querySelector('.buttons-grid');
 
 // input numbers into display
@@ -45,7 +46,8 @@ document.querySelector('.plusMinus').addEventListener('click', function(e) {
 
 // Percent button
 document.querySelector('.percent').addEventListener('click', function(e) {
-    let newDisplayValue = parseFloat(displayValue) / 100;
+    let inputDisplay = document.querySelector('.inputDisplay').textContent;
+    let newDisplayValue = parseFloat(inputDisplay) / 100;
     displayValue= `${newDisplayValue}`;
     displayValue = rounding(displayValue);
     document.querySelector('.inputDisplay').textContent = displayValue;
@@ -61,6 +63,8 @@ function selectNumbers() {
         number.addEventListener('click', function(e) {
             if (displayValue === '0') { displayValue = '' };
             if (displayValue.length > 8) { return };
+            // for selecting number after pressing '='
+            if (toCalc[0] === result) { toCalc = [];}
             const numberText = e.target;
             displayValue = displayValue + numberText.textContent;
             if (displayValue[0] === '.') { displayValue = '0.' }; 
@@ -81,6 +85,7 @@ function clear() {
     } else if (displayValue === '0' && toCalc.length !== 0) {
         toCalc = [];
         displayValue = '0';
+        result = '';
     } else {
         displayValue = '0';
     }
@@ -95,11 +100,18 @@ for (let i = 1; i <= 4; i++) {
     selectOperator.addEventListener('click', function(e) {
         // e.target.style.backgroundColor = 'rgb(247, 224, 181)';
         if (toCalc.length === 0) {
+            toCalc = [];
             toCalc[0] = displayValue;
             toCalc[1] = e.target.textContent;
-            displayValue = '0';
-            document.querySelector('.inputDisplay').textContent = displayValue; 
-        } else if (toCalc.length === 2) {
+            console.log(toCalc);
+            displayValue = '0'; 
+            enableDecimalButton();
+        } else if (toCalc.length === 1) {
+            toCalc[1] = e.target.textContent;
+            console.log(toCalc);
+            displayValue = '0'; 
+            enableDecimalButton();
+        } else if (toCalc.length === 2 && displayValue !== '0') {
             toCalc[2] = displayValue;
             displayValue = '0';
             console.log(toCalc);
@@ -107,17 +119,20 @@ for (let i = 1; i <= 4; i++) {
             const value2 = parseFloat(toCalc[2]);
             const operator = toCalc[1];
             result = operate(operator, value1, value2);
+            result = rounding(result);
             console.log(result);
             result = `${result}`;
-            // displayValue = rounding(displayValue); Need to add parameters to rounding function
             document.querySelector('.inputDisplay').textContent = result;
             toCalc = [];
             toCalc[0] = result;
             toCalc[1] = e.target.textContent;
             console.log(toCalc);
-        } else if (toCalc.length === 2 && (result === toCalc[0])) {
+            enableDecimalButton();
+        } else if (toCalc.length === 2 && displayValue === '0') {
             toCalc[1] = e.target.textContent;
-        }
+            // ^ to change operator without changing stored values
+            console.log(toCalc);
+        } else { return };
         
     })
     continue;
@@ -125,16 +140,59 @@ for (let i = 1; i <= 4; i++) {
 
 // equals button
 document.querySelector('.equals').addEventListener('click', function(e) {
-
+    if (toCalc.length === 0) {
+        return;
+    // } else if (toCalc.length === 2 && displayValue === '0') {
+    //     const repeatingAddend = toCalc[0]
+    //     displayValue = '0';
+    //     const value1 = parseFloat(toCalc[0]);
+    //     const value2 = parseFloat(repeatingAddend);
+    //     const operator = toCalc[1];
+    //     result = operate(operator, value1, value2);
+    //     console.log(result);
+    //     result = `${result}`;
+    //     result = rounding(result);
+    //     toCalc = [result, operator, repeatingAddend];
+    //     console.log(toCalc);
+    // } else if (toCalc.length === 3 && displayValue === '0') {
+    //     const value1 = parseFloat(toCalc[0]);
+    //     const value2 = parseFloat(toCalc[2]);
+    //     const operator = toCalc[1];
+    //     result = operate(operator, value1, value2);
+    //     console.log(result);
+    //     result = `${result}`;
+    //     result = rounding(result);
+    //     toCalc = [result, operator, `${value2}`];
+    //     console.log(toCalc);
+    } else if (toCalc.length === 2) {
+        toCalc[2] = displayValue;
+        displayValue = '0';
+        const value1 = parseFloat(toCalc[0]);
+        const value2 = parseFloat(toCalc[2]);
+        const operator = toCalc[1];
+        result = operate(operator, value1, value2);
+        console.log(result);
+        result = `${result}`;
+        result = rounding(result);
+        document.querySelector('.inputDisplay').textContent = result;
+        toCalc = [ result ];
+        console.log(toCalc);
+    } else return;
 })
 
 // round results to fit inputDisplay
 // only covers number between -1 and 1 for now
 function rounding(value) {
     let newValue = parseFloat(value);
-    console.log(value);
-    console.log(newValue);
     if (Math.floor(newValue) === 0 && value.length > 8) {
+        newValue = `${Math.round(newValue * Math.pow(10,8)) / Math.pow(10,8)}`;
+        newValue = newValue.slice(0,9);
+        return newValue;
+    } else if (newValue > 999999999 || newValue < -999999999) {
+        newValue = 'ERR'
+        return newValue;
+    } else if ( newValue >= -999999999 && newValue <= 999999999 && value.length > 8) {
+        console.log('works');
         newValue = `${Math.round(newValue * Math.pow(10,8)) / Math.pow(10,8)}`;
         newValue = newValue.slice(0,9);
         return newValue;
