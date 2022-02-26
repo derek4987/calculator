@@ -4,7 +4,6 @@ let result;
 let toRepeat = [];
 const inputDisplay = document.querySelector('.inputDisplay');
 function enableDecimalButton() { document.querySelector('.b10').disabled = false };
-// const gridButtons = document.querySelector('.buttons-grid');
 
 // input numbers into display
 selectNumbers();
@@ -83,7 +82,6 @@ function clear() {
 }
 
 // Select operator and calculate
-// some problems with changing operators in chain calc
 for (let i = 1; i <= 4; i++) {
     const selectOperator = document.querySelector(`.o${i}`);
     selectOperator.addEventListener('click', function(e) {
@@ -186,7 +184,6 @@ document.querySelector('.equals').addEventListener('click', function(e) {
 })
 
 // round results to fit inputDisplay
-// only covers number between -1 and 1 for now
 function rounding(value) {
     let newValue = parseFloat(value);
     if (Math.floor(newValue) === 0 && value.length > 8) {
@@ -237,17 +234,3 @@ function operate(operator, value1, value2) {
         return divide(value1, value2);
     } else return;
 }
-
-// Remove operator highlight when selected
-// function removeHighlight() {
-    // const clearButton = document.querySelector('.clear');
-    // clearButton.addEventListener('click', function(e) {
-        // for (let i = 1; i <= 4; i++) {
-        //     let operator = document.querySelector(`.o${i}`);
-        //     operator.style.backgroundColor = 'rgb(223, 168, 68)';
-        //     continue;
-        // }    
-        // document.querySelector('.divide').style.backgroundColor = 'rgb(223, 168, 68)';
-    // })
-    
-// }
