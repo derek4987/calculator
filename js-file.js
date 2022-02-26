@@ -1,22 +1,7 @@
-/* Using toCalc to store inputed numbers
-    - Add first number on display to toCalc when an operator is pressed
-        -When using percent, function will multiply by 100 and input value on display. when normal operator is selected, that number will be added to toCalc, so will not be stored until operator is selected.
-        - Same with plus/minus except multiply by -1
-    - Order: 
-        1: display number
-        2: select operator. This adds the display number to toCalc[0], and the operator symbol to toCalc[1] 
-        3: another display number 
-        4: select second operator. This adds the display number to ToCalc[2], runs the result between toCalc[0] and toCalc[2] using the operator assigned to toCalc[1]. Then clears toCalc (toCalc = [];), adds the result to toCalc[0], and adds the operator selected in step 4 to toCalc[1].
-        5: If equals is selected instead of a second operator, this adds the display value to toCalc[2], runs and displays the result between toCalc[0] and toCalc[2] using the operator assigned to toCalc[1]. then clears toCalc (toCalc = [];), and adds the result to toCalc[0]
-        6: an operator selected after 'equals' assigns the selected operator to toCalc[1] and the display number to toCalc[0]
-
-        Will need to add several if/else if statements to define different scenarios when toCalc[0],[1],or [2] are defined if (toCalc[i] !== defined) ... 
-
-        when doing an operater, when you press = multiple times it repeats the operator.
-*/
 let displayValue = '';
 let toCalc = [];
 let result;
+let toRepeat = [];
 const inputDisplay = document.querySelector('.inputDisplay');
 function enableDecimalButton() { document.querySelector('.b10').disabled = false };
 // const gridButtons = document.querySelector('.buttons-grid');
@@ -105,18 +90,20 @@ for (let i = 1; i <= 4; i++) {
         // e.target.style.backgroundColor = 'rgb(247, 224, 181)';
         if (toCalc.length === 0 && displayValue === '' && result === '') {
             return;
-        } else if (toCalc.length === 0 && displayValue !== '') {
+        } else if ((toCalc.length === 0 || toCalc.length === 3) && displayValue !== '') {
             toCalc = [];
             toCalc[0] = displayValue;
             toCalc[1] = e.target.textContent;
             console.log(toCalc);
             displayValue = ''; 
             enableDecimalButton();
-        } else if (toCalc.length === 0 && displayValue === '') {
+        } else if ((toCalc.length === 0 || toCalc.length === 3) && displayValue === '') {
+            toCalc = [];
             toCalc[0] = result;
             toCalc[1] = e.target.textContent;
             console.log(toCalc);
         } else if (toCalc.length === 2 && displayValue !== '') {
+            toRepeat = [e.target.textContent ,displayValue];
             toCalc[2] = displayValue;
             displayValue = '';
             console.log(toCalc);
@@ -145,31 +132,44 @@ for (let i = 1; i <= 4; i++) {
 
 // equals button
 document.querySelector('.equals').addEventListener('click', function(e) {
-    if (toCalc.length === 0) {
+    if (toCalc.length === 0 && result === '') {
         return;
-    // } else if (toCalc.length === 2 && displayValue === '') {
-    //     const repeatingAddend = toCalc[0]
-    //     displayValue = '0';
-    //     const value1 = parseFloat(toCalc[0]);
-    //     const value2 = parseFloat(repeatingAddend);
-    //     const operator = toCalc[1];
-    //     result = operate(operator, value1, value2);
-    //     console.log(result);
-    //     result = `${result}`;
-    //     result = rounding(result);
-    //     toCalc = [result, operator, repeatingAddend];
-    //     console.log(toCalc);
-    // } else if (toCalc.length === 3 && displayValue === '0') {
-    //     const value1 = parseFloat(toCalc[0]);
-    //     const value2 = parseFloat(toCalc[2]);
-    //     const operator = toCalc[1];
-    //     result = operate(operator, value1, value2);
-    //     console.log(result);
-    //     result = `${result}`;
-    //     result = rounding(result);
-    //     toCalc = [result, operator, `${value2}`];
-    //     console.log(toCalc);
+    } else if (toCalc.length === 0 && result !== '') {
+        const value1 = parseFloat(result);
+        const value2 = parseFloat(toRepeat[1]);
+        const operator = toRepeat[0];
+        result = operate(operator, value1, value2);
+        console.log(result);
+        result = `${result}`;
+        result = rounding(result);
+        toCalc = [result, operator, `${value2}`];
+        console.log(toCalc);
+        inputDisplay.textContent = result;
+    } else if (toCalc.length === 2 && displayValue === '') {
+        const repeatingAddend = toCalc[0];
+        const value1 = parseFloat(toCalc[0]);
+        const value2 = parseFloat(repeatingAddend);
+        const operator = toCalc[1];
+        result = operate(operator, value1, value2);
+        console.log(result);
+        result = `${result}`;
+        result = rounding(result);
+        toCalc = [result, operator, repeatingAddend];
+        console.log(toCalc);
+        inputDisplay.textContent = result;
+    } else if (toCalc.length === 3 && displayValue === '') {
+        const value1 = parseFloat(toCalc[0]);
+        const value2 = parseFloat(toCalc[2]);
+        const operator = toCalc[1];
+        result = operate(operator, value1, value2);
+        console.log(result);
+        result = `${result}`;
+        result = rounding(result);
+        toCalc = [result, operator, `${value2}`];
+        console.log(toCalc);
+        inputDisplay.textContent = result;
     } else if (toCalc.length === 2) {
+        toRepeat = [toCalc[1], displayValue];
         toCalc[2] = displayValue;
         displayValue = '';
         const value1 = parseFloat(toCalc[0]);
