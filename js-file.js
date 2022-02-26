@@ -17,6 +17,7 @@
 let displayValue = '';
 let toCalc = [];
 let result;
+const inputDisplay = document.querySelector('.inputDisplay');
 function enableDecimalButton() { document.querySelector('.b10').disabled = false };
 // const gridButtons = document.querySelector('.buttons-grid');
 
@@ -32,25 +33,29 @@ document.querySelector('.b10').addEventListener('click', function(e) {
 document.querySelector('.backspace').addEventListener('click', function(e) {
     let currentNumberLength = displayValue.length;
     displayValue = displayValue.slice(0, currentNumberLength -1);
-    if (displayValue === '') { displayValue = '0' };
-    document.querySelector('.inputDisplay').textContent = displayValue;
+    if (displayValue === '') { 
+        inputDisplay.textContent = '0'; 
+    } else {
+       inputDisplay.textContent = displayValue; 
+    };
+    
 });
 
 // Plus/Minus button
 document.querySelector('.plusMinus').addEventListener('click', function(e) {
-    if (displayValue === '0') { return };
+    if (displayValue === '') { return };
     let newDisplayValue = parseFloat(displayValue) * -1;
     displayValue = `${newDisplayValue}`;
-    document.querySelector('.inputDisplay').textContent = displayValue;
+    inputDisplay.textContent = displayValue;
 });
 
 // Percent button
 document.querySelector('.percent').addEventListener('click', function(e) {
-    let inputDisplay = document.querySelector('.inputDisplay').textContent;
-    let newDisplayValue = parseFloat(inputDisplay) / 100;
-    displayValue= `${newDisplayValue}`;
-    displayValue = rounding(displayValue);
-    document.querySelector('.inputDisplay').textContent = displayValue;
+    let newDisplayValue = parseFloat(inputDisplay.textContent) / 100;
+    newDisplayValue = `${newDisplayValue}`;
+    result = rounding(newDisplayValue);
+    inputDisplay.textContent = result;
+    displayValue = '';
 });
 
 // To clear display
@@ -61,14 +66,12 @@ function selectNumbers() {
     for (let i = 0; i <= 10; i++) {
         const number = document.querySelector(`.b${i}`);
         number.addEventListener('click', function(e) {
-            if (displayValue === '0') { displayValue = '' };
             if (displayValue.length > 8) { return };
-            // for selecting number after pressing '='
-            if (toCalc[0] === result) { toCalc = [];}
+            if (displayValue === '0') { displayValue = ''};
             const numberText = e.target;
             displayValue = displayValue + numberText.textContent;
             if (displayValue[0] === '.') { displayValue = '0.' }; 
-            document.querySelector('.inputDisplay').textContent = displayValue;
+            inputDisplay.textContent = displayValue;
             // change clear button text
             document.querySelector('.clear').textContent = 'C'
         })
@@ -80,16 +83,17 @@ function selectNumbers() {
 // to clear the display and stored values
 function clear() {
     document.querySelector('.clear').textContent = 'AC';
-    if (displayValue !== '0' && toCalc.length !== 0) {
-        displayValue = '0';
-    } else if (displayValue === '0' && toCalc.length !== 0) {
+    if (displayValue !== '' && toCalc.length !== 0) {
+        displayValue = '';
+    } else if (displayValue === '' && toCalc.length !== 0) {
         toCalc = [];
-        displayValue = '0';
+        displayValue = '';
         result = '';
     } else {
-        displayValue = '0';
+        displayValue = '';
+        result = '';
     }
-    document.querySelector('.inputDisplay').textContent = displayValue;
+    inputDisplay.textContent = '0';
     document.querySelector('.b10').disabled = false;
 }
 
@@ -99,21 +103,22 @@ for (let i = 1; i <= 4; i++) {
     const selectOperator = document.querySelector(`.o${i}`);
     selectOperator.addEventListener('click', function(e) {
         // e.target.style.backgroundColor = 'rgb(247, 224, 181)';
-        if (toCalc.length === 0) {
+        if (toCalc.length === 0 && displayValue === '' && result === '') {
+            return;
+        } else if (toCalc.length === 0 && displayValue !== '') {
             toCalc = [];
             toCalc[0] = displayValue;
             toCalc[1] = e.target.textContent;
             console.log(toCalc);
-            displayValue = '0'; 
+            displayValue = ''; 
             enableDecimalButton();
-        } else if (toCalc.length === 1) {
+        } else if (toCalc.length === 0 && displayValue === '') {
+            toCalc[0] = result;
             toCalc[1] = e.target.textContent;
             console.log(toCalc);
-            displayValue = '0'; 
-            enableDecimalButton();
-        } else if (toCalc.length === 2 && displayValue !== '0') {
+        } else if (toCalc.length === 2 && displayValue !== '') {
             toCalc[2] = displayValue;
-            displayValue = '0';
+            displayValue = '';
             console.log(toCalc);
             const value1 = parseFloat(toCalc[0]);
             const value2 = parseFloat(toCalc[2]);
@@ -122,13 +127,13 @@ for (let i = 1; i <= 4; i++) {
             result = rounding(result);
             console.log(result);
             result = `${result}`;
-            document.querySelector('.inputDisplay').textContent = result;
+            inputDisplay.textContent = result;
             toCalc = [];
             toCalc[0] = result;
             toCalc[1] = e.target.textContent;
             console.log(toCalc);
             enableDecimalButton();
-        } else if (toCalc.length === 2 && displayValue === '0') {
+        } else if (toCalc.length === 2 && displayValue === '') {
             toCalc[1] = e.target.textContent;
             // ^ to change operator without changing stored values
             console.log(toCalc);
@@ -142,7 +147,7 @@ for (let i = 1; i <= 4; i++) {
 document.querySelector('.equals').addEventListener('click', function(e) {
     if (toCalc.length === 0) {
         return;
-    // } else if (toCalc.length === 2 && displayValue === '0') {
+    // } else if (toCalc.length === 2 && displayValue === '') {
     //     const repeatingAddend = toCalc[0]
     //     displayValue = '0';
     //     const value1 = parseFloat(toCalc[0]);
@@ -166,7 +171,7 @@ document.querySelector('.equals').addEventListener('click', function(e) {
     //     console.log(toCalc);
     } else if (toCalc.length === 2) {
         toCalc[2] = displayValue;
-        displayValue = '0';
+        displayValue = '';
         const value1 = parseFloat(toCalc[0]);
         const value2 = parseFloat(toCalc[2]);
         const operator = toCalc[1];
@@ -174,8 +179,8 @@ document.querySelector('.equals').addEventListener('click', function(e) {
         console.log(result);
         result = `${result}`;
         result = rounding(result);
-        document.querySelector('.inputDisplay').textContent = result;
-        toCalc = [ result ];
+        inputDisplay.textContent = result;
+        toCalc = [];
         console.log(toCalc);
     } else return;
 })
