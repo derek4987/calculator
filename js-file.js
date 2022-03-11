@@ -79,13 +79,12 @@ for (let i = 0; i <= 10; i++) {
 // Keyboard input for decimal point
 document.addEventListener('keydown', (e) => {
     if (e.key === '.') {
-        const selected = e.key;
-        if (displayValue.search(".") !== -1) {
-            return;
-        }
-        selectNumberKeyboard(selected);
-    } else return;
-})
+        const regex = /[^\w\s]/g;
+        if (displayValue.search(regex) === -1) {
+            selectNumberKeyboard(e.key);
+        } else return;
+    };
+});
 
 // to clear the display and stored values
 function clear() {
@@ -168,11 +167,13 @@ document.addEventListener('keydown', (e) => {
 // equals button
 document.querySelector('.equals').addEventListener('click', function(e) {
     equalsButton();
+    enableDecimalButton();
 })
 // equals button keyboard input
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { 
-        equalsButton()
+        equalsButton();
+        enableDecimalButton();
     } else return;
 });
 
